@@ -2,25 +2,9 @@ import './App.scss';
 
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import _ from 'cypress/types/lodash';
-import cn from 'classnames';
 import React, { useState } from 'react';
-
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  userId: number;
-  user: User | null;
-}
+import { TodoList } from './components/TodoList';
+import { Todo } from './types/Todo';
 
 const defaultTodos: Todo[] = todosFromServer.map(todo => {
   return {
@@ -166,26 +150,7 @@ export const App = () => {
         </button>
       </form>
 
-      <section className="TodoList">
-        {todos.map(({ id, completed, title, user }) => (
-          <article
-            data-id={id}
-            className={cn('TodoInfo', {
-              'TodoInfo--completed': completed,
-            })}
-            key={id}
-          >
-            <h2 className="TodoInfo__title">{title}</h2>
-
-            <a
-              className="UserInfo"
-              href={`mailto:${user?.email || 'No_email'}`}
-            >
-              {user?.name || 'No user'}
-            </a>
-          </article>
-        ))}
-      </section>
+      <TodoList todos={todos} />
     </div>
   );
 };
