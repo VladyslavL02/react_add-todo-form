@@ -20,15 +20,7 @@ const DEFAULT_SELECT_TITLE_ERROR: boolean = false;
 const ALLOWED_CHARACTERS: RegExp = /[^a-zA-Zа-яА-ЯіІїЇєЄ0-9\s]/g;
 
 function getMaxId(todos: Todo[]) {
-  let maxId = -1;
-
-  todos.map(({ id }) => {
-    if (id > maxId) {
-      maxId = id;
-    }
-  });
-
-  return maxId;
+  return todos.reduce((max, todo) => Math.max(max, todo.id), -1);
 }
 
 export const App = () => {
@@ -45,13 +37,17 @@ export const App = () => {
     DEFAULT_SELECT_TITLE_ERROR,
   );
 
-  if (newTodoTitle !== DEFAULT_TITLE_VALUE && selectTitleError === true) {
-    setSelectTitleError(DEFAULT_SELECT_TITLE_ERROR);
-  }
+  useEffect(() => {
+    if (newTodoTitle !== DEFAULT_TITLE_VALUE && selectTitleError) {
+      setSelectTitleError(false);
+    }
+  }, [newTodoTitle, selectTitleError]);
 
-  if (selectedUser !== DEFAULT_SELECTED_USER && selectUserError === true) {
-    setSelectUserError(DEFAULT_SELECT_USER_ERROR);
-  }
+  useEffect(() => {
+    if (selectedUser !== DEFAULT_SELECTED_USER && selectUserError) {
+      setSelectUserError(false);
+    }
+  }, [selectedUser, selectUserError]);
 
   const handleSetNewTitleValue = (
     event: React.ChangeEvent<HTMLInputElement>,
