@@ -2,7 +2,7 @@ import './App.scss';
 
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TodoList } from './components/TodoList';
 import { Todo } from './types/Todo';
 
@@ -49,9 +49,17 @@ export const App = () => {
     setSelectTitleError(DEFAULT_SELECT_TITLE_ERROR);
   }
 
-  if (selectedUser !== DEFAULT_SELECTED_USER && selectUserError === true) {
-    setSelectUserError(DEFAULT_SELECT_USER_ERROR);
-  }
+  useEffect(() => {
+    if (newTodoTitle !== DEFAULT_TITLE_VALUE && selectTitleError === true) {
+      setSelectTitleError(DEFAULT_SELECT_TITLE_ERROR);
+    }
+  }, [newTodoTitle, selectTitleError]);
+
+  useEffect(() => {
+    if (selectedUser !== DEFAULT_SELECTED_USER && selectUserError === true) {
+      setSelectUserError(DEFAULT_SELECT_USER_ERROR);
+    }
+  }, [selectedUser, selectUserError]);
 
   const handleSetNewTitleValue = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -59,7 +67,7 @@ export const App = () => {
     setNewTodoTitle(event.target.value.replace(ALLOWED_CHARACTERS, ''));
   };
 
-  const handleTodoSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (
@@ -104,7 +112,7 @@ export const App = () => {
     <div className="App">
       <h1>Add todo form</h1>
 
-      <form action="/api/todos" method="POST">
+      <form action="/api/todos" method="POST" onSubmit={handleTodoSubmit}>
         <div className="field">
           <label htmlFor="titleInput">Title:</label>
           <input
@@ -145,7 +153,7 @@ export const App = () => {
           )}
         </div>
 
-        <button type="submit" data-cy="submitButton" onClick={handleTodoSubmit}>
+        <button type="submit" data-cy="submitButton">
           Add
         </button>
       </form>
