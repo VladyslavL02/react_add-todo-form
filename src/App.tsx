@@ -59,7 +59,7 @@ export const App = () => {
     setNewTodoTitle(event.target.value.replace(ALLOWED_CHARACTERS, ''));
   };
 
-  const handleTodoSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleTodoSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (
